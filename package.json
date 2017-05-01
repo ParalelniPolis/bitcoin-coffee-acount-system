@@ -63,8 +63,7 @@
     "redux": "^3.6.0"
   },
   "scripts": {
-    "start": "pushstate-server build 8086",
-    "dev": "REACT_APP_GRAPHQL_ENDPOINT=${REACT_APP_GRAPHQL_ENDPOINT:=https://api.graph.cool/simple/v1/cj0ssfibducn10118ad2jh2k7} node scripts/start.js",
+    "start": "REACT_APP_GRAPHQL_ENDPOINT=${REACT_APP_GRAPHQL_ENDPOINT:=https://api.graph.cool/simple/v1/cj0ssfibducn10118ad2jh2k7} node scripts/start.js",
     "build": "REACT_APP_GRAPHQL_ENDPOINT=${REACT_APP_GRAPHQL_ENDPOINT:=https://api.graph.cool/simple/v1/cj0ssfibducn10118ad2jh2k7} node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom"
   },
