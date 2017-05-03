@@ -9,6 +9,8 @@ import Divider from 'material-ui/Divider';
 import { css } from 'glamor';
 import PropTypes from 'prop-types';
 
+import vibrate from '../helpers/vibrate';
+
 import ActionButton from './ActionButton';
 import PinDialog from './PinDialog';
 
@@ -50,7 +52,7 @@ class AccountsPage extends React.Component {
 		}
 
 		handleOpen(accountId, userPinNumber) {
-				window.navigator.vibrate(50);
+				vibrate();
 
 				this.setState({
 						dialogOpen: true,

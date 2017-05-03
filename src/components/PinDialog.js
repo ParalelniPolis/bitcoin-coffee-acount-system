@@ -7,6 +7,7 @@ import { css } from 'glamor';
 import PropTypes from 'prop-types';
 
 import delay from '../helpers/delay';
+import vibrate from '../helpers/vibrate';
 import { MASTER_PIN } from '../config/config';
 
 const dialogStyle = {
@@ -58,7 +59,7 @@ export default class PinDialog extends React.PureComponent {
 		}
 
 		pinInput(numberClicked) {
-				window.navigator.vibrate(50);
+				vibrate();
 
 				this.setState({
 						inputPinNumber: this.state.inputPinNumber + numberClicked.toString()

@@ -5,6 +5,8 @@ import TextField from 'material-ui/TextField';
 import { css } from 'glamor';
 import PropTypes from 'prop-types';
 
+import vibrate from '../helpers/vibrate';
+
 import PinDialog from './PinDialog';
 
 import { MASTER_PIN } from '../config/config';
@@ -59,7 +61,7 @@ export default class NumberDialog extends React.PureComponent {
 		}
 
 		pinInput(numberClicked) {
-				window.navigator.vibrate(50);
+				vibrate();
 
 				this.setState({
 						inputPinNumber: this.state.inputPinNumber + numberClicked.toString()
