@@ -1,6 +1,7 @@
 import React from 'react';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import PropTypes from 'prop-types';
 
 const floatingButtonStyle = {
 		position: 'fixed',
@@ -22,9 +23,9 @@ const ActionButton = ({ action, mini, secondary, disabled }) => (
 );
 
 ActionButton.propTypes = {
-		mini: React.PropTypes.bool,
-		secondary: React.PropTypes.bool,
-		disabled: React.PropTypes.bool
+		mini: PropTypes.bool,
+		secondary: PropTypes.bool,
+		disabled: PropTypes.bool
 };
 
 ActionButton.defaultProps = {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { browserHistory } from 'react-router';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import SHA256 from 'js-sha256';
@@ -54,7 +55,7 @@ class CreateAccount extends React.Component {
 								}
 						});
 
-						window.location.pathname = '/';
+						browserHistory.push('/');
 				}
 				catch (error) {
 						console.log(error);

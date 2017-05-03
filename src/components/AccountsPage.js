@@ -7,6 +7,7 @@ import Paper from 'material-ui/Paper';
 import { List, ListItem } from 'material-ui/List';
 import Divider from 'material-ui/Divider';
 import { css } from 'glamor';
+import PropTypes from 'prop-types';
 
 import ActionButton from './ActionButton';
 import PinDialog from './PinDialog';
@@ -35,13 +36,17 @@ const initialState = {
 
 class AccountsPage extends React.Component {
 		static propTypes = {
-				data: React.PropTypes.object
+				data: PropTypes.object
 		};
 
 		constructor(props) {
 				super(props);
 
 				this.state = initialState;
+		}
+
+		componentDidUpdate() {
+				this.props.data.refetch();
 		}
 
 		handleOpen(accountId, userPinNumber) {

@@ -3,6 +3,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import { css } from 'glamor';
+import PropTypes from 'prop-types';
 
 import PinDialog from './PinDialog';
 
@@ -37,12 +38,12 @@ const initialState = {
 export default class NumberDialog extends React.PureComponent {
 
 		static propTypes = {
-				title: React.PropTypes.string,
-				errorText: React.PropTypes.string,
-				userPinNumber: React.PropTypes.string,
-				action: React.PropTypes.func.isRequired,
-				handleClose: React.PropTypes.func.isRequired,
-				dialogOpen: React.PropTypes.bool.isRequired
+				title: PropTypes.string,
+				errorText: PropTypes.string,
+				userPinNumber: PropTypes.string,
+				action: PropTypes.func.isRequired,
+				handleClose: PropTypes.func.isRequired,
+				dialogOpen: PropTypes.bool.isRequired
 		};
 
 		static defaultProps = {

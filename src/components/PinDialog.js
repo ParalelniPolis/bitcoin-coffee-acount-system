@@ -4,6 +4,7 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import SHA256 from 'js-sha256';
 import { css } from 'glamor';
+import PropTypes from 'prop-types';
 
 import { MASTER_PIN } from '../config/config';
 
@@ -35,12 +36,12 @@ const initialState = {
 export default class PinDialog extends React.PureComponent {
 
 		static propTypes = {
-				title: React.PropTypes.string,
-				errorText: React.PropTypes.string,
-				userPinNumber: React.PropTypes.string,
-				action: React.PropTypes.func.isRequired,
-				handleClose: React.PropTypes.func.isRequired,
-				dialogOpen: React.PropTypes.bool.isRequired
+				title: PropTypes.string,
+				errorText: PropTypes.string,
+				userPinNumber: PropTypes.string,
+				action: PropTypes.func.isRequired,
+				handleClose: PropTypes.func.isRequired,
+				dialogOpen: PropTypes.bool.isRequired
 		};
 
 		static defaultProps = {
@@ -55,24 +56,18 @@ export default class PinDialog extends React.PureComponent {
 				this.state = initialState;
 		}
 
-		componentDidUpdate() {
-				if (this.state.inputPinNumber.length === 4) {
-						this.checkPinNumber();
-				}
-		}
-
 		pinInput(numberClicked) {
 				window.navigator.vibrate(50);
 
 				this.setState({
 						inputPinNumber: this.state.inputPinNumber + numberClicked.toString()
-				});
+				}, () => this.checkPinNumber());
 		}
 
 		checkPinNumber() {
-				setTimeout(() => {
+				if (this.state.inputPinNumber.length === 4) {
 						if (SHA256(this.state.inputPinNumber) === this.props.userPinNumber) {
-								this.props.action();
+								setTimeout(() => this.props.action(), 200);
 						}
 						else {
 								this.setState({
@@ -80,7 +75,7 @@ export default class PinDialog extends React.PureComponent {
 										pinErrorText: this.props.errorText
 								});
 						}
-				}, 100);
+				}
 		}
 
 		handleClose() {

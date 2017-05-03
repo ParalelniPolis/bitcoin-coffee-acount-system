@@ -2,6 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
+import { browserHistory } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
@@ -15,6 +16,7 @@ import LinearProgress from 'material-ui/LinearProgress';
 import SuccessIcon from 'material-ui/svg-icons/action/done';
 import { green500 } from 'material-ui/styles/colors';
 import { css } from 'glamor';
+import PropTypes from 'prop-types';
 
 import ActionButton from './ActionButton';
 import PinDialog from './PinDialog';
@@ -91,7 +93,7 @@ const sidebarTotalStyle = css({
 class CreateOrder extends React.Component {
 
 		static propTypes = {
-				createOrder: React.PropTypes.func
+				createOrder: PropTypes.func
 		};
 
 		constructor(props) {
@@ -108,6 +110,10 @@ class CreateOrder extends React.Component {
 						finalDialog: false,
 						orderCreated: false
 				};
+		}
+
+		componentDidMount() {
+				this.props.data.refetch();
 		}
 
 		openCreditDialog() {
@@ -189,7 +195,7 @@ class CreateOrder extends React.Component {
 						this.setState({
 								orderCreated: true
 						}, () => {
-								window.location.pathname = '/';
+								setTimeout(() => browserHistory.push('/'), 1000)
 						});
 				}
 				catch (error) {
