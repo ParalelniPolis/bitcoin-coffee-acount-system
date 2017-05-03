@@ -1,13 +1,13 @@
 {
-  "name": "Bitcoin Coffee",
-  "short_name": "Bitcoin Coffee Account System",
+  "name": "Bitcoin Coffee Account System",
+  "short_name": "Bitcoin Coffee",
   "description": "A simple app for members of Bitcoin Coffee and Paper Hub for managing their drinks",
   "lang": "en-US",
   "start_url": ".",
   "display": "fullscreen",
   "orientation": "landscape",
   "background_color": "#000",
-  "theme_color": "#fff",
+  "theme_color": "#000",
   "dir": "ltr",
   "icons": [
     {
