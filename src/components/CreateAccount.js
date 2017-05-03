@@ -73,8 +73,8 @@ class CreateAccount extends React.Component {
 								<Divider />
 								<form action="/create-user" name="create-user" method="POST"
 											onSubmit={(event) => this.handleSubmit(event)}>
-										<TextField name="name" hintText="Name" errorText={this.state.missingName} autocomplete="off" fullWidth/>
-										<TextField name="pin" hintText="PIN" type="password" minLength={4} maxLength={4} autocomplete="off" inputmode="numeric" fullWidth/>
+										<TextField name="name" hintText="Name" errorText={this.state.missingName} autoComplete="off" fullWidth/>
+										<TextField name="pin" hintText="PIN" type="password" minLength={4} maxLength={4} autoComplete="off" inputMode="numeric" fullWidth/>
 										<RaisedButton type="submit" style={{ marginTop: '20px' }} label="Create User" primary fullWidth/>
 								</form>
 								<Snackbar
