@@ -3,7 +3,7 @@
   "short_name": "Bitcoin Coffee",
   "description": "A simple app for members of Bitcoin Coffee and Paper Hub for managing their drinks",
   "lang": "en-US",
-  "start_url": ".",
+  "start_url": "/",
   "display": "fullscreen",
   "orientation": "landscape",
   "background_color": "#000",
