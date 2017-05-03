@@ -18,6 +18,8 @@ import { green500 } from 'material-ui/styles/colors';
 import { css } from 'glamor';
 import PropTypes from 'prop-types';
 
+import delay from '../helpers/delay';
+
 import ActionButton from './ActionButton';
 import PinDialog from './PinDialog';
 import NumberDialog from './NumberDialog';
@@ -194,8 +196,9 @@ class CreateOrder extends React.Component {
 
 						this.setState({
 								orderCreated: true
-						}, () => {
-								setTimeout(() => browserHistory.push('/'), 1000)
+						}, async () => {
+								await delay(1000);
+								browserHistory.push('/');
 						});
 				}
 				catch (error) {

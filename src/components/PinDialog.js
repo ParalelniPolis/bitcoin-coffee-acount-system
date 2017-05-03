@@ -6,6 +6,7 @@ import SHA256 from 'js-sha256';
 import { css } from 'glamor';
 import PropTypes from 'prop-types';
 
+import delay from '../helpers/delay';
 import { MASTER_PIN } from '../config/config';
 
 const dialogStyle = {
@@ -64,10 +65,11 @@ export default class PinDialog extends React.PureComponent {
 				}, () => this.checkPinNumber());
 		}
 
-		checkPinNumber() {
+		checkPinNumber = async () => {
 				if (this.state.inputPinNumber.length === 4) {
 						if (SHA256(this.state.inputPinNumber) === this.props.userPinNumber) {
-								setTimeout(() => this.props.action(), 200);
+								await delay(200);
+								this.props.action();
 						}
 						else {
 								this.setState({
@@ -76,7 +78,7 @@ export default class PinDialog extends React.PureComponent {
 								});
 						}
 				}
-		}
+		};
 
 		handleClose() {
 				this.setState(initialState);
