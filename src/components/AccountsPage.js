@@ -15,19 +15,19 @@ import ActionButton from './ActionButton';
 import PinDialog from './PinDialog';
 
 const paperStyle = css({
-		width: '50%',
-		padding: '20px',
+		width: 400,
+		padding: 10,
 		textAlign: 'center'
 });
 
 const listStyle = css({
-		maxHeight: '500px',
+		maxHeight: 400,
 		overflowY: 'auto'
 });
 
 const listItemStyle = {
-		padding: '10px',
-		fontSize: '24px'
+		padding: 5,
+		fontSize: 16
 };
 
 const initialState = {

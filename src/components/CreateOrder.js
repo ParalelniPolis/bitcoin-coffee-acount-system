@@ -43,8 +43,8 @@ const paperStyle = css({
 		display: 'flex',
 		flexDirection: 'column',
 		justifyContent: 'space-between',
-		padding: '3px 20px',
-		margin: '10px',
+		padding: '3px 14px',
+		margin: '8px',
 		width: '170px',
 		textAlign: 'left'
 });
@@ -63,9 +63,9 @@ const sidebarItemWrapperStyle = css({
 
 const sidebarItemStyle = css({
 		flex: 1,
-		fontSize: '20px!important',
-		lineHeight: '20px!important',
-		height: '52px!important',
+		fontSize: '16px!important',
+		lineHeight: '16px!important',
+		height: '50px!important',
 		'::before, ::after': {
 				content: '',
 				display: 'table',
@@ -90,7 +90,7 @@ const sidebarTotalWrapperStyle = css({
 });
 
 const sidebarTotalStyle = css({
-		paddingTop: '16px'
+		paddingTop: 12
 });
 
 class CreateOrder extends React.Component {
@@ -237,7 +237,7 @@ class CreateOrder extends React.Component {
 				return (
 						<div {...containerStyle}>
 								<Paper {...sidebarStyle}>
-										<Subheader>
+										<Subheader style={{ lineHeight: '16px' }}>
 												{this.props.data.loading &&
 												<LinearProgress mode="indeterminate"/>
 												}
@@ -247,7 +247,7 @@ class CreateOrder extends React.Component {
 										</Subheader>
 										<Divider/>
 										<Subheader>
-												<h3>Order</h3>
+												<h3 style={{ lineHeight: '16px' }}>Order</h3>
 										</Subheader>
 										<Divider/>
 										<List {...sidebarItemWrapperStyle}>
@@ -280,10 +280,10 @@ class CreateOrder extends React.Component {
 																fullWidth
 																disabled={balanceCZK - finalPrice < -30 || finalPrice === 0}
 																labelStyle={{
-																		fontSize: '32px',
+																		fontSize: 24,
 																		textTransform: 'none'
 																}}
-																style={{ margin: '20px 0 0' }}
+																style={{ margin: '14px 0 0' }}
 																label="Checkout"
 																onTouchTap={() => this.openPinDialog()}
 														/>
@@ -298,7 +298,7 @@ class CreateOrder extends React.Component {
 														{...paperStyle}
 												>
 														<TouchRipple>
-																<h2>{category.name}</h2>
+																<h3>{category.name}</h3>
 														</TouchRipple>
 												</Paper>
 										))}
@@ -313,7 +313,7 @@ class CreateOrder extends React.Component {
 														justifyContent: 'flex-start'
 												}}
 												contentStyle={{
-														width: '810px',
+														width: 810,
 														maxWidth: '100%',
 														textAlign: 'center'
 												}}
@@ -334,8 +334,8 @@ class CreateOrder extends React.Component {
 																{...paperStyle}
 														>
 																<TouchRipple>
-																		<h2>{product.name}</h2>
-																		<h3>{product.priceCZK} CZK</h3>
+																		<h3>{product.name}</h3>
+																		<h4>{product.priceCZK} CZK</h4>
 																</TouchRipple>
 														</Paper>
 												))}
@@ -346,7 +346,7 @@ class CreateOrder extends React.Component {
 										open={this.state.finalDialog}
 										bodyStyle={{
 												textAlign: 'center',
-												fontSize: '32px'
+												fontSize: 24
 										}}
 								>
 										{!this.state.orderCreated &&

@@ -9,18 +9,20 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import { grey900 } from 'material-ui/styles/colors';
+import { black } from 'material-ui/styles/colors';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import './normalize.css';
 import './index.css';
 
-const networkInterface = createNetworkInterface({ uri: process.env.REACT_APP_GRAPHQL_ENDPOINT });
+import { GRAPHQL_ENDPOINT } from './config/';
+
+const networkInterface = createNetworkInterface({ uri: GRAPHQL_ENDPOINT });
 
 const client = new ApolloClient({ networkInterface });
 
 const muiTheme = getMuiTheme({
 		appBar: {
-				color: grey900,
+				color: black,
 		},
 });
 

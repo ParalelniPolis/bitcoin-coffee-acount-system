@@ -1,1 +1,0 @@
-export const MASTER_PIN = '9af15b336e6a9619928537df30b2e6a2376569fcf9d7e773eccede65606529a0';

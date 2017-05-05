@@ -8,10 +8,10 @@ import PropTypes from 'prop-types';
 
 import delay from '../helpers/delay';
 import vibrate from '../helpers/vibrate';
-import { MASTER_PIN } from '../config/config';
+import { MASTER_PIN } from '../config/index';
 
 const dialogStyle = {
-		width: '30%',
+		width: 350,
 		maxWidth: 'none',
 		textAlign: 'center',
 		display: 'flex',
@@ -21,9 +21,9 @@ const dialogStyle = {
 };
 
 const labelStyle = {
-		margin: '10px',
-		height: '50px',
-		fontSize: '32px'
+		margin: 5,
+		height: 40,
+		fontSize: 28
 };
 
 const textInputStyle = css({
@@ -105,7 +105,7 @@ export default class PinDialog extends React.PureComponent {
 										value={this.state.inputPinNumber}
 										errorText={this.state.pinErrorText}
 										type="password"
-										style={{ fontSize: '90px' }}
+										style={{ fontSize: 70 }}
 										name="pin-number"
 										fullWidth
 										disabled
