@@ -18,6 +18,8 @@ import { green500 } from 'material-ui/styles/colors';
 import { css } from 'glamor';
 import PropTypes from 'prop-types';
 
+import { MAX_DEBT } from '../config';
+
 import delay from '../helpers/delay';
 import vibrate  from '../helpers/vibrate';
 
@@ -35,6 +37,7 @@ const containerStyle = css({
 const contentStyle = css({
 		alignSelf: 'flex-start',
 		flexWrap: 'wrap',
+		flex: 3,
 		display: 'flex'
 });
 
@@ -45,14 +48,14 @@ const paperStyle = css({
 		justifyContent: 'space-between',
 		padding: '3px 14px',
 		margin: '8px',
-		width: '170px',
+		width: '150px',
 		textAlign: 'left'
 });
 
 const sidebarStyle = css({
 		display: 'flex',
 		flexDirection: 'column',
-		width: '360px',
+		flex: 1,
 		textAlign: 'center'
 });
 
@@ -242,7 +245,7 @@ class CreateOrder extends React.Component {
 												<LinearProgress mode="indeterminate"/>
 												}
 												{!this.props.data.loading &&
-												<h2>{name}: {balanceCZK} CZK</h2>
+												<h3>{name}: {balanceCZK} CZK</h3>
 												}
 										</Subheader>
 										<Divider/>
@@ -278,7 +281,7 @@ class CreateOrder extends React.Component {
 														<RaisedButton
 																primary
 																fullWidth
-																disabled={balanceCZK - finalPrice < -30 || finalPrice === 0}
+																disabled={balanceCZK - finalPrice < -MAX_DEBT || finalPrice === 0}
 																labelStyle={{
 																		fontSize: 24,
 																		textTransform: 'none'
@@ -420,10 +423,10 @@ const createOrderMutation = gql`
 `;
 
 const categoriesAccountQuery = gql`query categoriesAccount($id: ID!) {
-		allCategories {
+		allCategories(orderBy: position_ASC) {
 			id
 			name
-			products (filter: { active: true }) {
+			products (filter: { active: true }, orderBy: position_ASC) {
 				id
 				name
 				priceCZK
