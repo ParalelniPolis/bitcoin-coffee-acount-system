@@ -92,10 +92,8 @@ export default class NumberDialog extends React.PureComponent {
 				if (this.state.pinEnter) {
 						return (
 								<PinDialog
-										dialogOpen={true}
-										handleClose={() => {
-												return true;
-										}}
+										dialogOpen={this.state.pinEnter}
+										handleClose={this.handleClose.bind(this)}
 										action={this.handleAddCredits.bind(this)}
 								/>
 						);

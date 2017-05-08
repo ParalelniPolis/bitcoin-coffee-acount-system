@@ -37,7 +37,7 @@ const containerStyle = css({
 const contentStyle = css({
 		alignSelf: 'flex-start',
 		flexWrap: 'wrap',
-		flex: 3,
+		flex: 2.5,
 		display: 'flex'
 });
 
