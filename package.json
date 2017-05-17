@@ -31,7 +31,7 @@
     "extract-text-webpack-plugin": "1.0.1",
     "file-loader": "^0.11.1",
     "filesize": "^3.5.9",
-    "flow-bin": "^0.45.0",
+    "flow-bin": "^0.46.0",
     "fs-extra": "0.30.0",
     "glamor": "^2.20.24",
     "graphql": "^0.9.x",
@@ -102,5 +102,9 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "flow-typed": "^2.1.2"
   }
 }

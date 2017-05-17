@@ -1,5 +1,6 @@
+// @flow
 import React from 'react';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
+import { FloatingActionButton } from 'material-ui';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import PropTypes from 'prop-types';
 
@@ -9,7 +10,7 @@ const floatingButtonStyle = {
 		right: '50px'
 };
 
-const ActionButton = ({ action, mini, secondary, disabled }) => (
+const ActionButton = ({ action, mini, secondary, disabled }: {action: void, mini: boolean, secondary: boolean, disabled: boolean}) => (
 		<FloatingActionButton
 				style={floatingButtonStyle}
 				onTouchTap={action}

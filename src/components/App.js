@@ -1,7 +1,10 @@
+// @flow
 import React from 'react';
 import { Link } from 'react-router';
-import AppBar from 'material-ui/AppBar';
+import { AppBar } from 'material-ui';
 import { css } from 'glamor';
+
+import type { Children } from 'react';
 
 const wrapperStyle = css({
 		display: 'flex',
@@ -23,7 +26,7 @@ const appBarStyle = css({
 		justifyContent: 'center'
 });
 
-export default ({ children }) => (
+export default ({ children }: Children) => (
 		<div {...wrapperStyle}>
 				<AppBar showMenuIconButton={false} titleStyle={{ display: 'none' }} {...appBarStyle}>
 						<Link to="/">
