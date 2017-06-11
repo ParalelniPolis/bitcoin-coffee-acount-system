@@ -1,8 +1,15 @@
 // @flow
 import React from 'react';
-import { FloatingActionButton } from 'material-ui';
+import FloatingActionButton from 'material-ui/FloatingActionButton/index';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import PropTypes from 'prop-types';
+import type { Element } from 'react'
+
+type Props = {
+	action: Function,
+	mini?: boolean,
+	secondary?: boolean,
+	disabled?: boolean
+}
 
 const floatingButtonStyle = {
 		position: 'fixed',
@@ -10,24 +17,18 @@ const floatingButtonStyle = {
 		right: '50px'
 };
 
-const ActionButton = ({ action, mini, secondary, disabled }: {action: void, mini: boolean, secondary: boolean, disabled: boolean}) => (
+const ActionButton = (props: Props): Element<any> => (
 		<FloatingActionButton
 				style={floatingButtonStyle}
-				onTouchTap={action}
-				mini={mini}
-				secondary={secondary}
-				disabled={disabled}
+				onTouchTap={props.action}
+				mini={props.mini}
+				secondary={props.secondary}
+				disabled={props.disabled}
 
 		>
 				<ContentAdd />
 		</FloatingActionButton>
 );
-
-ActionButton.propTypes = {
-		mini: PropTypes.bool,
-		secondary: PropTypes.bool,
-		disabled: PropTypes.bool
-};
 
 ActionButton.defaultProps = {
 		mini: false,

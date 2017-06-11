@@ -1,15 +1,30 @@
+// @flow
 import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { browserHistory } from 'react-router';
-import CircularProgress from 'material-ui/CircularProgress';
-import Paper from 'material-ui/Paper';
-import { List, ListItem } from 'material-ui/List';
-import Divider from 'material-ui/Divider';
+import CircularProgress from 'material-ui/CircularProgress/index';
+import Paper from 'material-ui/Paper/index';
+import { List, ListItem } from 'material-ui/List/index';
+import Divider from 'material-ui/Divider/index';
 import { css } from 'glamor';
-import PropTypes from 'prop-types';
-
 import ActionButton from './ActionButton';
+
+import type { Element } from 'react';
+
+type Account = {
+	name: string,
+	id: string,
+	pin: string
+}
+
+type Props = {
+	data: {
+		loading: boolean,
+		refetch: Function,
+		allAccounts: Array<Account>
+	}
+}
 
 const paperStyle = css({
 		width: 400,
@@ -27,16 +42,13 @@ const listItemStyle = {
 		fontSize: 16
 };
 
-class AccountsPage extends React.Component {
-		static propTypes = {
-				data: PropTypes.object
-		};
+class AccountsPage extends React.PureComponent<void, Props, void> {
 
 		componentDidUpdate() {
 				this.props.data.refetch();
 		}
 
-		render() {
+		render(): Element<any> {
 				if (this.props.data.loading) {
 						return (
 								<CircularProgress />
