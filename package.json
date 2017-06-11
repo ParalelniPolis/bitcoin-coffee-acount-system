@@ -6,6 +6,7 @@
   "dependencies": {
     "apollo-client": "^1.2.2",
     "autoprefixer": "^7.1.0",
+    "babel-cli": "^6.24.1",
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.3",
@@ -32,6 +33,7 @@
     "file-loader": "^0.11.1",
     "filesize": "^3.5.9",
     "flow-bin": "^0.46.0",
+    "flow-typed": "^2.1.2",
     "fs-extra": "0.30.0",
     "glamor": "^2.20.25",
     "graphql": "^0.9.x",
@@ -103,9 +105,5 @@
   },
   "eslintConfig": {
     "extends": "react-app"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.24.1",
-    "flow-typed": "^2.1.2"
   }
 }
