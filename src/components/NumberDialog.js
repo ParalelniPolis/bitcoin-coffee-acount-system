@@ -11,6 +11,8 @@ import PinDialog from './PinDialog';
 
 import { MASTER_PIN } from '../config/index';
 
+import type { Element } from 'react';
+
 type DefaultProps = {
 	title: string,
 	errorText: string,
@@ -69,7 +71,7 @@ export default class NumberDialog extends React.PureComponent<DefaultProps, Prop
 
 	state: State = initialState;
 
-	pinInput = (numberClicked: number) => {
+	pinInput = (numberClicked: number): void => {
 		vibrate();
 
 		this.setState({
@@ -77,13 +79,13 @@ export default class NumberDialog extends React.PureComponent<DefaultProps, Prop
 		});
 	};
 
-	handleClose = () => {
+	handleClose = (): void => {
 		this.props.handleClose();
 		this.setState(initialState);
 		this.props.refetch();
 	};
 
-	handleAddCredits = async () => {
+	handleAddCredits = async (): Promise<void> => {
 		if (this.state.inputPinNumber) {
 			await this.props.action(parseInt(this.state.inputPinNumber, 10));
 
@@ -91,19 +93,19 @@ export default class NumberDialog extends React.PureComponent<DefaultProps, Prop
 		}
 	};
 
-	enterMasterPin = () => {
+	enterMasterPin = (): void => {
 		this.setState({
 			pinEnter: true
 		});
 	};
 
-	render() {
+	render(): Element<any> {
 		if (this.state.pinEnter) {
 			return (
 				<PinDialog
 					dialogOpen={this.state.pinEnter}
-					handleClose={this.handleClose}
-					action={this.handleAddCredits}
+					handleClose={() => this.handleClose()}
+					action={() => this.handleAddCredits()}
 				/>
 			);
 		}
@@ -111,7 +113,7 @@ export default class NumberDialog extends React.PureComponent<DefaultProps, Prop
 		return (
 			<Dialog
 				title={this.props.title}
-				onRequestClose={this.handleClose}
+				onRequestClose={() => this.handleClose()}
 				actions={
 					[
 						<FlatButton
@@ -122,7 +124,7 @@ export default class NumberDialog extends React.PureComponent<DefaultProps, Prop
 						<FlatButton
 							label="Cancel"
 							primary={true}
-							onTouchTap={this.handleClose}
+							onTouchTap={() => this.handleClose()}
 						/>
 					]
 				}

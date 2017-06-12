@@ -27,6 +27,8 @@ import ActionButton from './ActionButton';
 import PinDialog from './PinDialog';
 import NumberDialog from './NumberDialog';
 
+import type { Element } from 'react';
+
 type Account = {
 	id: string,
 	name: string,
@@ -138,81 +140,81 @@ const sidebarTotalStyle = css({
 class CreateOrder extends React.Component<void, Props, State> {
 
 	state: State = {
-	creditsDialogOpen: false,
-	pinDialogOpen: false,
-	dialogOpen: false,
-	activeCategoryId: null,
-	products: [],
-	finalDialog: false,
-	orderCreated: false
-};
+		creditsDialogOpen: false,
+		pinDialogOpen: false,
+		dialogOpen: false,
+		activeCategoryId: null,
+		products: [],
+		finalDialog: false,
+		orderCreated: false
+	};
 
 	componentDidMount() {
 		this.props.data.refetch();
 	}
 
-	openCreditDialog() {
+	openCreditDialog = (): void => {
 		this.setState({
 			creditsDialogOpen: true
 		});
-	}
+	};
 
-	closeCreditDialog() {
+	closeCreditDialog = (): void => {
 		this.setState({
 			creditsDialogOpen: false
 		});
-	}
+	};
 
-	openPinDialog() {
+	openPinDialog = (): void => {
 		vibrate();
 
 		this.setState({
 			pinDialogOpen: true
 		});
-	}
+	};
 
-	closePinDialog() {
+	closePinDialog = (): void => {
 		this.setState({
 			pinDialogOpen: false
 		});
-	}
+	};
 
-	openDialog(categoryId) {
+	openDialog = (categoryId: string): void => {
 		vibrate();
 
 		this.setState({
 			dialogOpen: true,
 			activeCategoryId: categoryId
 		});
-	}
+	};
 
-	closeDialog() {
+	closeDialog = (): void => {
 		vibrate();
 
 		this.setState({
 			dialogOpen: false,
 			activeCategoryId: null
 		});
-	}
+	};
 
-	addToCart(product) {
+	addToCart = (product: Product): void => {
 		vibrate();
 
 		this.setState({
 			products: [...this.state.products, product]
 		});
-	}
+	};
 
-	removeFromCart(productToRemove) {
+	removeFromCart = (productToRemove: Product): void => {
 		vibrate();
 
 		const indexToRemove = _.findIndex(this.state.products, product => product.id === productToRemove.id);
 		this.setState({
 			products: this.state.products.filter((product, index) => index !== indexToRemove)
 		});
-	}
+	};
 
-	handleOrder = async (finalPrice: number) => {
+	handleOrder = async (finalPrice: number): Promise<void> => {
 		const { id, balanceCZK } = this.props.data.Account;
 		const { products } = this.state;
 
@@ -239,7 +241,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 		}
 	};
 
-	render() {
+	render(): Element<any> {
 		const { allCategories } = this.props.data;
 		const account: Account = this.props.data.Account;
 		const { balanceCZK } = account || 0;
@@ -349,13 +351,13 @@ class CreateOrder extends React.Component<void, Props, State> {
 							maxWidth: '100%',
 							textAlign: 'center'
 						}}
-						onRequestClose={this.closeDialog.bind(this)}
+						onRequestClose={() => this.closeDialog()}
 						open={this.state.dialogOpen}
 						actions={
 							<FlatButton
 								label="OK"
 								primary={true}
-								onTouchTap={this.closeDialog.bind(this)}
+								onTouchTap={() => this.closeDialog()}
 							/>
 						}
 					>
@@ -398,7 +400,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 					errorText="Wrong PIN Number"
 					dialogOpen={this.state.pinDialogOpen}
 					userPinNumber={this.props.data.Account.pin || undefined}
-					handleClose={this.closePinDialog.bind(this)}
+					handleClose={() => this.closePinDialog()}
 					action={() => this.handleOrder(finalPrice)}
 				/>
 				<NumberDialog
@@ -406,7 +408,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 					errorText="Wrong input"
 					dialogOpen={this.state.creditsDialogOpen}
 					refetch={this.props.data.refetch.bind(this)}
-					handleClose={this.closeCreditDialog.bind(this)}
+					handleClose={() => this.closeCreditDialog()}
 					action={(addBalance) => this.props.addCredits({
 							variables: {
 								id: this.props.data.Account.id,

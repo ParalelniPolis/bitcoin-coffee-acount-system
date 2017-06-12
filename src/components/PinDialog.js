@@ -10,6 +10,8 @@ import delay from '../helpers/delay';
 import vibrate from '../helpers/vibrate';
 import { MASTER_PIN } from '../config/index';
 
+import type { Element } from 'react';
+
 type DefaultProps = {
 	title: string,
 	errorText: string,
@@ -65,7 +67,7 @@ export default class PinDialog extends React.PureComponent<DefaultProps, Props, 
 
 	state: State = initialState;
 
-	pinInput = (numberClicked: number) => {
+	pinInput = (numberClicked: number): void => {
 		vibrate();
 
 		this.setState({
@@ -73,7 +75,7 @@ export default class PinDialog extends React.PureComponent<DefaultProps, Props, 
 		}, () => this.checkPinNumber());
 	};
 
-	checkPinNumber = async () => {
+	checkPinNumber = async (): Promise<void> => {
 		if (this.state.inputPinNumber.length === 4) {
 			if (SHA256(this.state.inputPinNumber) === this.props.userPinNumber) {
 				await delay(200);
@@ -88,21 +90,21 @@ export default class PinDialog extends React.PureComponent<DefaultProps, Props, 
 		}
 	};
 
-	handleClose = () => {
+	handleClose = (): void => {
 		this.setState(initialState);
 		this.props.handleClose();
 	};
 
-	render() {
+	render(): Element<any> {
 		return (
 			<Dialog
 				title={this.props.title}
-				onRequestClose={this.handleClose.bind(this)}
+				onRequestClose={() => this.handleClose()}
 				actions={
 					<FlatButton
 						label="Cancel"
 						primary={true}
-						onTouchTap={this.handleClose.bind(this)}
+						onTouchTap={() => this.handleClose()}
 					/>
 				}
 				contentStyle={dialogStyle}
