@@ -14,8 +14,7 @@ import type { Element } from 'react';
 
 type Account = {
 	name: string,
-	id: string,
-	pin: string
+	id: string
 }
 
 type Props = {
@@ -79,7 +78,6 @@ const FeedQuery = gql`query allAccounts {
   allAccounts {
     id
     name
-    pin
   }
 }`;
 

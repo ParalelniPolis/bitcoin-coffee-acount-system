@@ -3,7 +3,6 @@ import React from 'react';
 import { browserHistory } from 'react-router';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import SHA256 from 'js-sha256';
 import Divider from 'material-ui/Divider/index';
 import Paper from 'material-ui/Paper/index';
 import TextField from 'material-ui/TextField/index';
@@ -42,7 +41,7 @@ class CreateAccount extends React.Component<void, Props, State> {
 	handleSubmit = async (event) => {
 		event.preventDefault();
 
-		const { name, pin } = event.target;
+		const { name } = event.target;
 
 		if (name.value === '') {
 			this.setState({
@@ -55,8 +54,7 @@ class CreateAccount extends React.Component<void, Props, State> {
 		try {
 			await this.props.createAccount({
 				variables: {
-					name: name.value,
-					pin: pin.value ? SHA256(pin.value) : null
+					name: name.value
 				}
 			});
 
@@ -79,8 +77,6 @@ class CreateAccount extends React.Component<void, Props, State> {
 				<form action="/create-user" name="create-user" method="POST"
 							onSubmit={(event) => this.handleSubmit(event)}>
 					<TextField name="name" hintText="Name" errorText={this.state.missingName} autoComplete="off" fullWidth />
-					<TextField name="pin" hintText="PIN" type="password" minLength={4} maxLength={4} autoComplete="off"
-										 inputMode="numeric" fullWidth />
 					<RaisedButton type="submit" style={{ marginTop: '20px' }} label="Create User" primary fullWidth />
 				</form>
 				<Snackbar
@@ -95,10 +91,9 @@ class CreateAccount extends React.Component<void, Props, State> {
 }
 
 const CreateAccountMutation = gql`
-	mutation createAccount($name: String!, $pin: String) {
+	mutation createAccount($name: String!) {
 		createAccount(
 			name: $name
-			pin: $pin
 			balanceCZK: 0
 		) {
 			id

@@ -32,7 +32,6 @@ import type { Element } from 'react';
 type Account = {
 	id: string,
 	name: string,
-	pin: string,
 	balanceCZK: number
 }
 
@@ -396,10 +395,8 @@ class CreateOrder extends React.Component<void, Props, State> {
 				</Dialog>
 				<ActionButton secondary action={() => this.openCreditDialog()} />
 				<PinDialog
-					title={this.props.data.Account.pin ? 'Enter your PIN' : undefined}
 					errorText="Wrong PIN Number"
 					dialogOpen={this.state.pinDialogOpen}
-					userPinNumber={this.props.data.Account.pin || undefined}
 					handleClose={() => this.closePinDialog()}
 					action={() => this.handleOrder(finalPrice)}
 				/>
@@ -466,7 +463,6 @@ const categoriesAccountQuery = gql`query categoriesAccount($id: ID!) {
 		Account(id: $id) {
    		id
     	name
-    	pin
     	balanceCZK
   	}
 	}
