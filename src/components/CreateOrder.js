@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import _ from 'lodash';
+import { groupBy } from 'lodash';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import { browserHistory } from 'react-router';
@@ -196,7 +196,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 	};
 
 	removeFromCart = (productToRemove: Product): void => {
-		const indexToRemove = _.findIndex(this.state.products, product => product.id === productToRemove.id);
+		const indexToRemove = this.state.products.findIndex(product => product.id === productToRemove.id);
 		this.setState({
 			products: this.state.products.filter((product, index) => index !== indexToRemove)
 		});
@@ -235,7 +235,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 		const { balanceCZK } = account || 0;
 		const { name } = account || '';
 		const { products } = this.state;
-		const activeCategory = this.state.activeCategoryId && _.find(allCategories, category => category.id === this.state.activeCategoryId);
+		const activeCategory = this.state.activeCategoryId && allCategories.find(category => category.id === this.state.activeCategoryId);
 
 		let groupedProducts: Object = {};
 		let productKeys: Array<string> = [];
@@ -248,7 +248,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 		}
 
 		if (products) {
-			groupedProducts = _.groupBy(products, 'id');
+			groupedProducts = groupBy(products, 'id');
 			productKeys = Object.keys(groupedProducts);
 
 			products.forEach(product => (
@@ -273,7 +273,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 					</Subheader>
 					<Divider />
 					<List {...sidebarItemWrapperStyle}>
-						{productKeys.length > 0 && _.map(productKeys, (productGroupKey, index) => {
+						{productKeys.length > 0 && productKeys.map((productGroupKey, index) => {
 							const productGroup = groupedProducts[productGroupKey];
 							const product = productGroup[0];
 
