@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import AccountsPage from './components/AccountsPage';
 import CreateOrder from './components/CreateOrder';
 import CreateUser from './components/CreateAccount';
+import Montly from './components/Monthly';
 import App from './components/App'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
@@ -39,6 +40,7 @@ ReactDOM.render((
 												<IndexRoute component={AccountsPage}/>
 												<Route path="create/:id" component={CreateOrder}/>
 												<Route path="create-account" component={CreateUser}/>
+												<Route path="monthly" component={Montly} />
 										</Route>
 								</Router>
 						</MuiThemeProvider>
