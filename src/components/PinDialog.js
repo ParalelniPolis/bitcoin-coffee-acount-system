@@ -7,7 +7,6 @@ import SHA256 from 'js-sha256';
 import { css } from 'glamor';
 
 import delay from '../helpers/delay';
-import vibrate from '../helpers/vibrate';
 import { MASTER_PIN } from '../config/index';
 
 import type { Element } from 'react';
@@ -68,8 +67,6 @@ export default class PinDialog extends React.PureComponent<DefaultProps, Props, 
 	state: State = initialState;
 
 	pinInput = (numberClicked: number): void => {
-		vibrate();
-
 		this.setState({
 			inputPinNumber: this.state.inputPinNumber + numberClicked.toString()
 		}, () => this.checkPinNumber());

@@ -21,7 +21,6 @@ import { css } from 'glamor';
 import { MAX_DEBT } from '../config';
 
 import delay from '../helpers/delay';
-import vibrate  from '../helpers/vibrate';
 
 import ActionButton from './ActionButton';
 import PinDialog from './PinDialog';
@@ -165,8 +164,6 @@ class CreateOrder extends React.Component<void, Props, State> {
 	};
 
 	openPinDialog = (): void => {
-		vibrate();
-
 		this.setState({
 			pinDialogOpen: true
 		});
@@ -179,8 +176,6 @@ class CreateOrder extends React.Component<void, Props, State> {
 	};
 
 	openDialog = (categoryId: string): void => {
-		vibrate();
-
 		this.setState({
 			dialogOpen: true,
 			activeCategoryId: categoryId
@@ -188,8 +183,6 @@ class CreateOrder extends React.Component<void, Props, State> {
 	};
 
 	closeDialog = (): void => {
-		vibrate();
-
 		this.setState({
 			dialogOpen: false,
 			activeCategoryId: null
@@ -197,16 +190,12 @@ class CreateOrder extends React.Component<void, Props, State> {
 	};
 
 	addToCart = (product: Product): void => {
-		vibrate();
-
 		this.setState({
 			products: [...this.state.products, product]
 		});
 	};
 
 	removeFromCart = (productToRemove: Product): void => {
-		vibrate();
-
 		const indexToRemove = _.findIndex(this.state.products, product => product.id === productToRemove.id);
 		this.setState({
 			products: this.state.products.filter((product, index) => index !== indexToRemove)
