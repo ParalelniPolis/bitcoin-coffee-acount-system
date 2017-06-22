@@ -1,6 +1,5 @@
 // @flow
 import React from 'react';
-import { groupBy } from 'lodash';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import { browserHistory } from 'react-router';
@@ -23,6 +22,13 @@ import type { Product } from '../types/Product';
 import type { Category } from '../types/Category';
 import type { Account } from '../types/Account';
 
+type CartProduct = {
+	id: string,
+	name: string,
+	priceCZK: number,
+	amount: number
+}
+
 type Props = {
 	createOrder: Function,
 	addCredits: Function,
@@ -39,7 +45,9 @@ type State = {
 	pinDialogOpen: boolean,
 	dialogOpen: boolean,
 	activeCategoryId: ?string,
-	products: Array<Product>,
+	products: {
+		[string]: CartProduct
+	},
 	finalDialog: boolean,
 	orderCreated: boolean
 }
@@ -58,7 +66,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 		pinDialogOpen: false,
 		dialogOpen: false,
 		activeCategoryId: null,
-		products: [],
+		products: {},
 		finalDialog: false,
 		orderCreated: false
 	};
@@ -105,17 +113,38 @@ class CreateOrder extends React.Component<void, Props, State> {
 		});
 	};
 
-	addToCart = (product: Product): void => {
+	addToCart = (productToAdd: Product): void => {
 		this.setState({
-			products: [...this.state.products, product]
+			products: {
+				...this.state.products,
+				[productToAdd.id]: {
+					...productToAdd,
+					amount: this.state.products[productToAdd.id] ? this.state.products[productToAdd.id].amount + 1 : 1
+				}
+			}
 		});
 	};
 
 	removeFromCart = (productToRemove: Product): void => {
-		const indexToRemove = this.state.products.findIndex(product => product.id === productToRemove.id);
-		this.setState({
-			products: this.state.products.filter((product, index) => index !== indexToRemove)
-		});
+		if (this.state.products[productToRemove.id].amount === 1) {
+			const newProducts = { ...this.state.products };
+			delete newProducts[productToRemove.id];
+
+			this.setState({
+				products: newProducts
+			});
+		}
+		else {
+			this.setState({
+				products: {
+					...this.state.products,
+					[productToRemove.id]: {
+						...productToRemove,
+						amount: this.state.products[productToRemove.id].amount - 1
+					}
+				}
+			});
+		}
 	};
 
 	handleOrder = async (finalPrice: number): Promise<void> => {
@@ -123,7 +152,8 @@ class CreateOrder extends React.Component<void, Props, State> {
 		const { products } = this.state;
 
 		const finalBalance = balanceCZK - finalPrice;
-		const productIds = products.map(product => product.id);
+		const productIds = Object.keys(products);
+		const productsRaw = JSON.stringify(products);
 
 		this.setState({
 			pinDialogOpen: false,
@@ -131,7 +161,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 		});
 
 		try {
-			await this.props.createOrder({ variables: { id, productIds, finalPrice, finalBalance } });
+			await this.props.createOrder({ variables: { id, productIds, finalPrice, finalBalance, productsRaw } });
 
 			this.setState({
 				orderCreated: true
@@ -152,12 +182,11 @@ class CreateOrder extends React.Component<void, Props, State> {
 		const { name } = account || '';
 		const { products } = this.state;
 
-		let groupedProducts: Object = {};
 		let productKeys: Array<string> = [];
 		let finalPrice: number = 0;
 		let activeCategory: ?Category = null;
 
-		if(this.state.activeCategoryId) {
+		if (this.state.activeCategoryId) {
 			activeCategory = allCategories.find(category => category.id === this.state.activeCategoryId);
 		}
 
@@ -168,11 +197,10 @@ class CreateOrder extends React.Component<void, Props, State> {
 		}
 
 		if (products) {
-			groupedProducts = groupBy(products, 'id');
-			productKeys = Object.keys(groupedProducts);
+			productKeys = Object.keys(products);
 
-			products.forEach(product => (
-				finalPrice += product.priceCZK
+			productKeys.forEach(productId => (
+				finalPrice += products[productId].priceCZK * products[productId].amount
 			));
 		}
 
@@ -184,7 +212,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 					name={name}
 					productKeys={productKeys}
 					finalPrice={finalPrice}
-					groupedProducts={groupedProducts}
+					groupedProducts={products}
 					removeFromCart={(product: Product) => this.removeFromCart(product)}
 					openPinDialog={() => this.openPinDialog()}
 				/>
@@ -262,11 +290,12 @@ const addCreditsMutation = gql`
 `;
 
 const createOrderMutation = gql`
-  mutation createOrder($id: ID!, $productIds: [ID!], $finalPrice: Int!, $finalBalance: Int!) {
+  mutation createOrder($id: ID!, $productIds: [ID!], $finalPrice: Int!, $finalBalance: Int!, $productsRaw: Json) {
   	createOrder(
   		accountId: $id
   		productsIds: $productIds
   		priceCZK: $finalPrice
+  		productsRaw: $productsRaw
   	) {
     	id
   	}

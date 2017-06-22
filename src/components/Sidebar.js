@@ -83,18 +83,17 @@ const Sidebar = ({ loading, balanceCZK, name, productKeys, finalPrice, groupedPr
 		</Subheader>
 		<Divider />
 		<List {...sidebarItemWrapperStyle}>
-			{productKeys.length > 0 && productKeys.map((productGroupKey, index) => {
+			{productKeys.length > 0 && productKeys.map((productGroupKey) => {
 				const productGroup = groupedProducts[productGroupKey];
-				const product = productGroup[0];
 
 				return [
 					<ListItem
-						key={product.id + index}
-						onClick={() => removeFromCart(product)}
+						key={productGroup.id}
+						onClick={() => removeFromCart(productGroup)}
 						{...sidebarItemStyle}
 					>
-						<span {...sidebarItemNameStyle}><strong>{productGroup.length}x</strong> {product.name}</span>
-						<span {...sidebarItemPriceStyle}><strong>{productGroup.length * product.priceCZK}
+						<span {...sidebarItemNameStyle}><strong>{productGroup.amount}x</strong> {productGroup.name}</span>
+						<span {...sidebarItemPriceStyle}><strong>{productGroup.amount * productGroup.priceCZK}
 							CZK</strong></span>
 					</ListItem>,
 					<Divider />
