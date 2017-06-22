@@ -77,7 +77,7 @@ class CreateAccount extends React.Component<void, Props, State> {
 				<form action="/create-user" name="create-user" method="POST"
 							onSubmit={(event) => this.handleSubmit(event)}>
 					<TextField name="name" hintText="Name" errorText={this.state.missingName} autoComplete="off" fullWidth />
-					<RaisedButton type="submit" style={{ marginTop: '20px' }} label="Create User" primary fullWidth />
+					<RaisedButton type="submit" style={{ marginTop: '20px' }} label="Create account" primary fullWidth />
 				</form>
 				<Snackbar
 					open={this.state.snackbar}
