@@ -231,7 +231,8 @@ class CreateOrder extends React.Component<void, Props, State> {
 					action={(addBalance: number) => this.props.addCredits({
 							variables: {
 								id: this.props.data.Account.id,
-								finalBalance: this.props.data.Account.balanceCZK + addBalance
+								finalBalance: this.props.data.Account.balanceCZK + addBalance,
+								amount: addBalance
 							}
 						}
 					)}
@@ -242,13 +243,20 @@ class CreateOrder extends React.Component<void, Props, State> {
 }
 
 const addCreditsMutation = gql`
-	mutation addCredits($id: ID!, $finalBalance: Int!) {
+	mutation addCredits($id: ID!, $finalBalance: Int!, $amount: Int!) {
 		updateAccount(
       id: $id
       balanceCZK: $finalBalance
     ) {
     	id
     	balanceCZK
+  	}
+  	createCreditTransaction(
+  		accountId: $id
+  		amount: $amount
+  	) {
+  		id
+  		amount
   	}
 	}
 `;
