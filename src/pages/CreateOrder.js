@@ -4,27 +4,21 @@ import { groupBy } from 'lodash';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import { browserHistory } from 'react-router';
-import { List, ListItem } from 'material-ui/List/index';
-import Subheader from 'material-ui/Subheader/index';
-import Divider from 'material-ui/Divider/index';
 import Paper from 'material-ui/Paper/index';
 import Dialog from 'material-ui/Dialog/index';
 import TouchRipple from 'material-ui/internal/TouchRipple';
 import FlatButton from 'material-ui/FlatButton/index';
-import RaisedButton from 'material-ui/RaisedButton/index';
 import CircularProgress from 'material-ui/CircularProgress/index';
-import LinearProgress from 'material-ui/LinearProgress/index';
 import SuccessIcon from 'material-ui/svg-icons/action/done';
 import { green500 } from 'material-ui/styles/colors';
 import { css } from 'glamor';
-
-import { MAX_DEBT } from '../config';
 
 import delay from '../helpers/delay';
 
 import ActionButton from '../components/ActionButton';
 import PinDialog from '../components/PinDialog';
 import NumberDialog from '../components/NumberDialog';
+import Sidebar from '../components/Sidebar';
 
 import type { Element } from 'react';
 
@@ -51,6 +45,7 @@ type Props = {
 	addCredits: Function,
 	data: {
 		refetch: Function,
+		loading: boolean,
 		Account: Account,
 		allCategories: Array<Category>
 	}
@@ -89,50 +84,6 @@ const paperStyle = css({
 	margin: '8px',
 	width: '150px',
 	textAlign: 'left'
-});
-
-const sidebarStyle = css({
-	display: 'flex',
-	flexDirection: 'column',
-	flex: 1,
-	textAlign: 'center'
-});
-
-const sidebarItemWrapperStyle = css({
-	width: '100%',
-	overflowY: 'auto'
-});
-
-const sidebarItemStyle = css({
-	flex: 1,
-	fontSize: '16px!important',
-	lineHeight: '16px!important',
-	height: '50px!important',
-	'::before, ::after': {
-		content: '',
-		display: 'table',
-		clear: 'both'
-	}
-});
-
-const sidebarItemNameStyle = css({
-	float: 'left'
-});
-
-const sidebarItemPriceStyle = css({
-	float: 'right'
-});
-
-const sidebarTotalWrapperStyle = css({
-	flexGrow: 1,
-	flexShrink: 0,
-	display: 'flex',
-	flexDirection: 'column',
-	justifyContent: 'flex-end'
-});
-
-const sidebarTotalStyle = css({
-	paddingTop: 12
 });
 
 class CreateOrder extends React.Component<void, Props, State> {
@@ -258,60 +209,16 @@ class CreateOrder extends React.Component<void, Props, State> {
 
 		return (
 			<div {...containerStyle}>
-				<Paper {...sidebarStyle}>
-					<Subheader style={{ lineHeight: '16px' }}>
-						{this.props.data.loading &&
-						<LinearProgress mode="indeterminate" />
-						}
-						{!this.props.data.loading &&
-						<h3>{name}: {balanceCZK} CZK</h3>
-						}
-					</Subheader>
-					<Divider />
-					<Subheader>
-						<h3 style={{ lineHeight: '16px' }}>Order</h3>
-					</Subheader>
-					<Divider />
-					<List {...sidebarItemWrapperStyle}>
-						{productKeys.length > 0 && productKeys.map((productGroupKey, index) => {
-							const productGroup = groupedProducts[productGroupKey];
-							const product = productGroup[0];
-
-							return [
-								<ListItem
-									key={product.id + index}
-									onClick={() => this.removeFromCart(product)}
-									{...sidebarItemStyle}
-								>
-									<span {...sidebarItemNameStyle}><strong>{productGroup.length}x</strong> {product.name}</span>
-									<span {...sidebarItemPriceStyle}><strong>{productGroup.length * product.priceCZK}
-										CZK</strong></span>
-								</ListItem>,
-								<Divider />
-							];
-
-						})}
-					</List>
-					<div {...sidebarTotalWrapperStyle}>
-						<Paper>
-							<div {...sidebarTotalStyle}>
-								<strong>Total: {finalPrice} CZK</strong>
-							</div>
-							<RaisedButton
-								primary
-								fullWidth
-								disabled={balanceCZK - finalPrice < -MAX_DEBT || finalPrice === 0}
-								labelStyle={{
-									fontSize: 24,
-									textTransform: 'none'
-								}}
-								style={{ margin: '14px 0 0' }}
-								label="Checkout"
-								onTouchTap={() => this.openPinDialog()}
-							/>
-						</Paper>
-					</div>
-				</Paper>
+				<Sidebar
+					loading={this.props.data.loading}
+					balanceCZK={balanceCZK}
+					name={name}
+					productKeys={productKeys}
+					finalPrice={finalPrice}
+					groupedProducts={groupedProducts}
+					removeFromCart={(product) => this.removeFromCart(product)}
+					openPinDialog={() => this.openPinDialog()}
+				/>
 				<div {...contentStyle}>
 					{allCategories && allCategories.map(category => (
 						<Paper
