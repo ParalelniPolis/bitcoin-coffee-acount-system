@@ -185,16 +185,16 @@ class CreateOrder extends React.Component<void, Props, State> {
 					productKeys={productKeys}
 					finalPrice={finalPrice}
 					groupedProducts={groupedProducts}
-					removeFromCart={(product) => this.removeFromCart(product)}
+					removeFromCart={(product: Product) => this.removeFromCart(product)}
 					openPinDialog={() => this.openPinDialog()}
 				/>
 				<Products
 					allCategories={allCategories}
 					activeCategory={activeCategory}
 					dialogOpen={this.state.dialogOpen}
-					openDialog={(categoryId) => this.openDialog(categoryId)}
+					openDialog={(categoryId: string) => this.openDialog(categoryId)}
 					closeDialog={() => this.closeDialog()}
-					addToCart={(product) => this.addToCart(product)}
+					addToCart={(product: Product) => this.addToCart(product)}
 				/>
 				<Dialog
 					modal
@@ -228,7 +228,7 @@ class CreateOrder extends React.Component<void, Props, State> {
 					dialogOpen={this.state.creditsDialogOpen}
 					refetch={this.props.data.refetch.bind(this)}
 					handleClose={() => this.closeCreditDialog()}
-					action={(addBalance) => this.props.addCredits({
+					action={(addBalance: number) => this.props.addCredits({
 							variables: {
 								id: this.props.data.Account.id,
 								finalBalance: this.props.data.Account.balanceCZK + addBalance
