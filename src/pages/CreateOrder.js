@@ -22,9 +22,9 @@ import { MAX_DEBT } from '../config';
 
 import delay from '../helpers/delay';
 
-import ActionButton from './ActionButton';
-import PinDialog from './PinDialog';
-import NumberDialog from './NumberDialog';
+import ActionButton from '../components/ActionButton';
+import PinDialog from '../components/PinDialog';
+import NumberDialog from '../components/NumberDialog';
 
 import type { Element } from 'react';
 

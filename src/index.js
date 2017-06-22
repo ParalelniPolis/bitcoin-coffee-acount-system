@@ -1,10 +1,10 @@
 // @flow
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AccountsPage from './components/AccountsPage';
-import CreateOrder from './components/CreateOrder';
-import CreateUser from './components/CreateAccount';
-import Montly from './components/Monthly';
+import AccountsPage from './pages/AccountsPage';
+import CreateOrder from './pages/CreateOrder';
+import CreateUser from './pages/CreateAccount';
+import Montly from './pages/Monthly';
 import App from './components/App'
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';

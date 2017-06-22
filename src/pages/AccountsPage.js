@@ -8,7 +8,7 @@ import Paper from 'material-ui/Paper/index';
 import { List, ListItem } from 'material-ui/List/index';
 import Divider from 'material-ui/Divider/index';
 import { css } from 'glamor';
-import ActionButton from './ActionButton';
+import ActionButton from '../components/ActionButton';
 
 import type { Element } from 'react';
 
