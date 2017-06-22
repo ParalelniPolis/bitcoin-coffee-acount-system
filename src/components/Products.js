@@ -36,7 +36,7 @@ const paperStyle = css({
 	textAlign: 'left'
 });
 
-export default ({ allCategories, activeCategory, dialogOpen, openDialog , closeDialog, addToCart }: Props): Element<any> => (
+const Products = ({ allCategories, activeCategory, dialogOpen, openDialog, closeDialog, addToCart }: Props): Element<any> => (
 	<div {...contentStyle}>
 		{allCategories && allCategories.map(category => (
 			<Paper
@@ -88,4 +88,6 @@ export default ({ allCategories, activeCategory, dialogOpen, openDialog , closeD
 			))}
 		</Dialog>
 	</div>
-)
+);
+
+export default Products;

@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import Paper from 'material-ui/Paper/index'
+import Paper from 'material-ui/Paper/index';
 import Subheader from 'material-ui/Subheader/index';
 import { List, ListItem } from 'material-ui/List/index';
 import Divider from 'material-ui/Divider/index';
@@ -67,7 +67,7 @@ const sidebarTotalStyle = css({
 	paddingTop: 12
 });
 
-export default ({ loading, balanceCZK, name, productKeys, finalPrice, groupedProducts, removeFromCart, openPinDialog }: Props): Element<Paper> => (
+const Sidebar = ({ loading, balanceCZK, name, productKeys, finalPrice, groupedProducts, removeFromCart, openPinDialog }: Props): Element<Paper> => (
 	<Paper {...sidebarStyle}>
 		<Subheader style={{ lineHeight: '16px' }}>
 			{loading &&
@@ -122,4 +122,6 @@ export default ({ loading, balanceCZK, name, productKeys, finalPrice, groupedPro
 			</Paper>
 		</div>
 	</Paper>
-)
+);
+
+export default Sidebar;
