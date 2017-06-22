@@ -4,10 +4,7 @@ import { groupBy } from 'lodash';
 import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
 import { browserHistory } from 'react-router';
-import Paper from 'material-ui/Paper/index';
 import Dialog from 'material-ui/Dialog/index';
-import TouchRipple from 'material-ui/internal/TouchRipple';
-import FlatButton from 'material-ui/FlatButton/index';
 import CircularProgress from 'material-ui/CircularProgress/index';
 import SuccessIcon from 'material-ui/svg-icons/action/done';
 import { green500 } from 'material-ui/styles/colors';
@@ -19,26 +16,12 @@ import ActionButton from '../components/ActionButton';
 import PinDialog from '../components/PinDialog';
 import NumberDialog from '../components/NumberDialog';
 import Sidebar from '../components/Sidebar';
+import Products from '../components/Products';
 
 import type { Element } from 'react';
-
-type Account = {
-	id: string,
-	name: string,
-	balanceCZK: number
-}
-
-type Product = {
-	id: string,
-	name: string,
-	priceCZK: number
-}
-
-type Category = {
-	id: string,
-	name: string,
-	products: Array<Product>
-}
+import type { Product } from '../types/Product';
+import type { Category } from '../types/Category';
+import type { Account } from '../types/Account';
 
 type Props = {
 	createOrder: Function,
@@ -66,24 +49,6 @@ const containerStyle = css({
 	flex: 1,
 	display: 'flex',
 	flexDirection: 'row'
-});
-
-const contentStyle = css({
-	alignSelf: 'flex-start',
-	flexWrap: 'wrap',
-	flex: 2.5,
-	display: 'flex'
-});
-
-const paperStyle = css({
-	position: 'relative',
-	display: 'flex',
-	flexDirection: 'column',
-	justifyContent: 'space-between',
-	padding: '3px 14px',
-	margin: '8px',
-	width: '150px',
-	textAlign: 'left'
 });
 
 class CreateOrder extends React.Component<void, Props, State> {
@@ -186,11 +151,15 @@ class CreateOrder extends React.Component<void, Props, State> {
 		const { balanceCZK } = account || 0;
 		const { name } = account || '';
 		const { products } = this.state;
-		const activeCategory = this.state.activeCategoryId && allCategories.find(category => category.id === this.state.activeCategoryId);
 
 		let groupedProducts: Object = {};
 		let productKeys: Array<string> = [];
 		let finalPrice: number = 0;
+		let activeCategory: ?Category = null;
+
+		if(this.state.activeCategoryId) {
+			activeCategory = allCategories.find(category => category.id === this.state.activeCategoryId);
+		}
 
 		if (this.props.data.loading) {
 			return (
@@ -219,57 +188,14 @@ class CreateOrder extends React.Component<void, Props, State> {
 					removeFromCart={(product) => this.removeFromCart(product)}
 					openPinDialog={() => this.openPinDialog()}
 				/>
-				<div {...contentStyle}>
-					{allCategories && allCategories.map(category => (
-						<Paper
-							key={category.id}
-							onClick={() => this.openDialog(category.id)}
-							{...paperStyle}
-						>
-							<TouchRipple>
-								<h3>{category.name}</h3>
-							</TouchRipple>
-						</Paper>
-					))}
-					<Dialog
-						title={activeCategory && activeCategory.name}
-						autoScrollBodyContent
-						bodyStyle={{
-							display: 'flex',
-							flexDirection: 'row',
-							flexWrap: 'wrap',
-							alignItems: 'stretch',
-							justifyContent: 'flex-start'
-						}}
-						contentStyle={{
-							width: 810,
-							maxWidth: '100%',
-							textAlign: 'center'
-						}}
-						onRequestClose={() => this.closeDialog()}
-						open={this.state.dialogOpen}
-						actions={
-							<FlatButton
-								label="OK"
-								primary={true}
-								onTouchTap={() => this.closeDialog()}
-							/>
-						}
-					>
-						{activeCategory && activeCategory.products.map(product => (
-							<Paper
-								key={product.id}
-								onClick={() => this.addToCart(product)}
-								{...paperStyle}
-							>
-								<TouchRipple>
-									<h3>{product.name}</h3>
-									<h4>{product.priceCZK} CZK</h4>
-								</TouchRipple>
-							</Paper>
-						))}
-					</Dialog>
-				</div>
+				<Products
+					allCategories={allCategories}
+					activeCategory={activeCategory}
+					dialogOpen={this.state.dialogOpen}
+					openDialog={(categoryId) => this.openDialog(categoryId)}
+					closeDialog={() => this.closeDialog()}
+					addToCart={(product) => this.addToCart(product)}
+				/>
 				<Dialog
 					modal
 					open={this.state.finalDialog}
