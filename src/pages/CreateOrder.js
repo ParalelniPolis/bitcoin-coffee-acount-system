@@ -2,6 +2,7 @@
 import React from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
 import Dialog from 'material-ui/Dialog/index';
 import CircularProgress from 'material-ui/CircularProgress/index';
@@ -17,21 +18,22 @@ import NumberDialog from '../components/NumberDialog';
 import Sidebar from '../components/Sidebar';
 import Products from '../components/Products';
 
+import * as cartActions from '../actions/cart';
+
 import type { Element } from 'react';
 import type { Product } from '../types/Product';
 import type { Category } from '../types/Category';
 import type { Account } from '../types/Account';
-
-type CartProduct = {
-	id: string,
-	name: string,
-	priceCZK: number,
-	amount: number
-}
+import type { CartProduct } from '../types/CartProduct';
 
 type Props = {
 	createOrder: Function,
 	addCredits: Function,
+	addToCart: Function,
+	removeFromCart: Function,
+	cartProducts: {
+		[string]: CartProduct
+	},
 	data: {
 		refetch: Function,
 		loading: boolean,
@@ -45,9 +47,6 @@ type State = {
 	pinDialogOpen: boolean,
 	dialogOpen: boolean,
 	activeCategoryId: ?string,
-	products: {
-		[string]: CartProduct
-	},
 	finalDialog: boolean,
 	orderCreated: boolean
 }
@@ -129,6 +128,7 @@ const categoriesAccountQuery = gql`query categoriesAccount($id: ID!) {
 @graphql(addCreditsMutation, {
 	name: 'addCredits'
 })
+@connect(state => ({ cartProducts: state.cart.products }), { ...cartActions })
 export default class CreateOrder extends React.Component<void, Props, State> {
 
 	state: State = {
@@ -136,7 +136,6 @@ export default class CreateOrder extends React.Component<void, Props, State> {
 		pinDialogOpen: false,
 		dialogOpen: false,
 		activeCategoryId: null,
-		products: {},
 		finalDialog: false,
 		orderCreated: false
 	};
@@ -183,43 +182,9 @@ export default class CreateOrder extends React.Component<void, Props, State> {
 		});
 	};
 
-	addToCart = (productToAdd: Product): void => {
-		this.setState({
-			products: {
-				...this.state.products,
-				[productToAdd.id]: {
-					...productToAdd,
-					amount: this.state.products[productToAdd.id] ? this.state.products[productToAdd.id].amount + 1 : 1
-				}
-			}
-		});
-	};
-
-	removeFromCart = (productToRemove: Product): void => {
-		if (this.state.products[productToRemove.id].amount === 1) {
-			const newProducts = { ...this.state.products };
-			delete newProducts[productToRemove.id];
-
-			this.setState({
-				products: newProducts
-			});
-		}
-		else {
-			this.setState({
-				products: {
-					...this.state.products,
-					[productToRemove.id]: {
-						...productToRemove,
-						amount: this.state.products[productToRemove.id].amount - 1
-					}
-				}
-			});
-		}
-	};
-
 	handleOrder = async (finalPrice: number): Promise<void> => {
 		const { id, balanceCZK } = this.props.data.Account;
-		const { products } = this.state;
+		const products = this.props.cartProducts;
 
 		const finalBalance = balanceCZK - finalPrice;
 		const productIds = Object.keys(products);
@@ -250,7 +215,7 @@ export default class CreateOrder extends React.Component<void, Props, State> {
 		const account: Account = this.props.data.Account;
 		const { balanceCZK } = account || 0;
 		const { name } = account || '';
-		const { products } = this.state;
+		const products = this.props.cartProducts;
 
 		let productKeys: Array<string> = [];
 		let finalPrice: number = 0;
@@ -283,7 +248,7 @@ export default class CreateOrder extends React.Component<void, Props, State> {
 					productKeys={productKeys}
 					finalPrice={finalPrice}
 					groupedProducts={products}
-					removeFromCart={(product: Product) => this.removeFromCart(product)}
+					removeFromCart={(product: Product) => this.props.removeFromCart(product)}
 					openPinDialog={() => this.openPinDialog()}
 				/>
 				<Products
@@ -292,7 +257,7 @@ export default class CreateOrder extends React.Component<void, Props, State> {
 					dialogOpen={this.state.dialogOpen}
 					openDialog={(categoryId: string) => this.openDialog(categoryId)}
 					closeDialog={() => this.closeDialog()}
-					addToCart={(product: Product) => this.addToCart(product)}
+					addToCart={(product: Product) => this.props.addToCart(product)}
 				/>
 				<Dialog
 					modal
@@ -338,4 +303,4 @@ export default class CreateOrder extends React.Component<void, Props, State> {
 			</div>
 		);
 	}
-}
+};
