@@ -11,3 +11,4 @@
 <PROJECT_ROOT>/flow-typed/.*
 
 [options]
+esproposal.decorators=ignore

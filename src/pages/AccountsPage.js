@@ -41,7 +41,15 @@ const listItemStyle = {
 		fontSize: 16
 };
 
-class AccountsPage extends React.PureComponent<void, Props, void> {
+const FeedQuery = gql`query allAccounts {
+  allAccounts {
+    id
+    name
+  }
+}`;
+
+@graphql(FeedQuery)
+export default class AccountsPage extends React.PureComponent<void, Props, void> {
 
 		componentDidUpdate() {
 				this.props.data.refetch();
@@ -73,14 +81,3 @@ class AccountsPage extends React.PureComponent<void, Props, void> {
 				);
 		}
 }
-
-const FeedQuery = gql`query allAccounts {
-  allAccounts {
-    id
-    name
-  }
-}`;
-
-const AccountsPageWithData = graphql(FeedQuery)(AccountsPage);
-
-export default AccountsPageWithData;

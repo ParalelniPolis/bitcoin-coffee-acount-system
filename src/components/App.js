@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { AppBar } from 'material-ui';
 import { css } from 'glamor';
 
-import type { Children } from 'react';
+import type { Children, Element } from 'react';
 
 const wrapperStyle = css({
 		display: 'flex',
@@ -26,7 +26,7 @@ const appBarStyle = css({
 		justifyContent: 'center'
 });
 
-export default ({ children }: Children) => (
+const App = ({ children }: Children): Element<any> => (
 		<div {...wrapperStyle}>
 				<AppBar showMenuIconButton={false} titleStyle={{ display: 'none' }} {...appBarStyle}>
 						<Link to="/">
@@ -38,3 +38,5 @@ export default ({ children }: Children) => (
 				</div>
 		</div>
 );
+
+export default App;

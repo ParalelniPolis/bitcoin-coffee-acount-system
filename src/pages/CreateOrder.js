@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { graphql, compose } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { browserHistory } from 'react-router';
 import Dialog from 'material-ui/Dialog/index';
@@ -59,7 +59,77 @@ const containerStyle = css({
 	flexDirection: 'row'
 });
 
-class CreateOrder extends React.Component<void, Props, State> {
+const addCreditsMutation = gql`
+	mutation addCredits($id: ID!, $finalBalance: Int!, $amount: Int!) {
+		updateAccount(
+      id: $id
+      balanceCZK: $finalBalance
+    ) {
+    	id
+    	balanceCZK
+  	}
+  	createCreditTransaction(
+  		accountId: $id
+  		amount: $amount
+  	) {
+  		id
+  		amount
+  	}
+	}
+`;
+
+const createOrderMutation = gql`
+  mutation createOrder($id: ID!, $productIds: [ID!], $finalPrice: Int!, $finalBalance: Int!, $productsRaw: Json) {
+  	createOrder(
+  		accountId: $id
+  		productsIds: $productIds
+  		priceCZK: $finalPrice
+  		productsRaw: $productsRaw
+  	) {
+    	id
+  	}
+  	updateAccount(
+      id: $id
+      balanceCZK: $finalBalance
+    ) {
+    	id
+    	balanceCZK
+  	}
+	}
+`;
+
+const categoriesAccountQuery = gql`query categoriesAccount($id: ID!) {
+		allCategories(orderBy: position_ASC) {
+			id
+			name
+			products (filter: { active: true }, orderBy: position_ASC) {
+				id
+				name
+				priceCZK
+			}
+		}
+		Account(id: $id) {
+   		id
+    	name
+    	balanceCZK
+  	}
+	}
+`;
+
+@graphql(categoriesAccountQuery, {
+	options: ({ params }) => ({
+		variables: {
+			id: params.id
+		}
+	})
+})
+@graphql(createOrderMutation, {
+	name: 'createOrder'
+})
+@graphql(addCreditsMutation, {
+	name: 'addCredits'
+})
+export default class CreateOrder extends React.Component<void, Props, State> {
 
 	state: State = {
 		creditsDialogOpen: false,
@@ -269,78 +339,3 @@ class CreateOrder extends React.Component<void, Props, State> {
 		);
 	}
 }
-
-const addCreditsMutation = gql`
-	mutation addCredits($id: ID!, $finalBalance: Int!, $amount: Int!) {
-		updateAccount(
-      id: $id
-      balanceCZK: $finalBalance
-    ) {
-    	id
-    	balanceCZK
-  	}
-  	createCreditTransaction(
-  		accountId: $id
-  		amount: $amount
-  	) {
-  		id
-  		amount
-  	}
-	}
-`;
-
-const createOrderMutation = gql`
-  mutation createOrder($id: ID!, $productIds: [ID!], $finalPrice: Int!, $finalBalance: Int!, $productsRaw: Json) {
-  	createOrder(
-  		accountId: $id
-  		productsIds: $productIds
-  		priceCZK: $finalPrice
-  		productsRaw: $productsRaw
-  	) {
-    	id
-  	}
-  	updateAccount(
-      id: $id
-      balanceCZK: $finalBalance
-    ) {
-    	id
-    	balanceCZK
-  	}
-	}
-`;
-
-const categoriesAccountQuery = gql`query categoriesAccount($id: ID!) {
-		allCategories(orderBy: position_ASC) {
-			id
-			name
-			products (filter: { active: true }, orderBy: position_ASC) {
-				id
-				name
-				priceCZK
-			}
-		}
-		Account(id: $id) {
-   		id
-    	name
-    	balanceCZK
-  	}
-	}
-`;
-
-const OrderPage = compose(
-	graphql(addCreditsMutation, {
-		name: 'addCredits'
-	}),
-	graphql(createOrderMutation, {
-		name: 'createOrder'
-	}),
-	graphql(categoriesAccountQuery, {
-		options: ({ params }) => ({
-			variables: {
-				id: params.id
-			}
-		})
-	})
-)(CreateOrder);
-
-export default OrderPage;

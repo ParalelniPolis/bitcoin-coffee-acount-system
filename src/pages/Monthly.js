@@ -44,7 +44,37 @@ type Props = {
 	}
 }
 
-class MonthlyPage extends React.PureComponent<void, Props, void> {
+const MonthlyOrdersQuery = gql`query allOrders {
+  allOrders(filter: {
+    AND:[{
+      createdAt_gte: "2017-05-01T00:00:00.000Z"
+    }, {
+      createdAt_lte: "2017-05-31T23:59:59.000Z"
+    }
+  ]}) {
+    account {
+    	id
+      name
+    }
+    products {
+    	name
+    	priceCZK
+    }
+    priceCZK
+  }
+  allAccounts {
+  	id
+  	name
+  	balanceCZK
+  	orders {
+  		priceCZK
+  	}
+  }
+}`;
+
+
+@graphql(MonthlyOrdersQuery)
+export default class MonthlyPage extends React.PureComponent<void, Props, void> {
 	render(): ?Element<any> {
 		if (this.props.data.loading) {
 			return null;
@@ -89,35 +119,3 @@ class MonthlyPage extends React.PureComponent<void, Props, void> {
 		);
 	}
 }
-
-const MonthlyOrdersQuery = gql`query allOrders {
-  allOrders(filter: {
-    AND:[{
-      createdAt_gte: "2017-05-01T00:00:00.000Z"
-    }, {
-      createdAt_lte: "2017-05-31T23:59:59.000Z"
-    }
-  ]}) {
-    account {
-    	id
-      name
-    }
-    products {
-    	name
-    	priceCZK
-    }
-    priceCZK
-  }
-  allAccounts {
-  	id
-  	name
-  	balanceCZK
-  	orders {
-  		priceCZK
-  	}
-  }
-}`;
-
-const MonthlyWithData = graphql(MonthlyOrdersQuery)(MonthlyPage);
-
-export default MonthlyWithData;

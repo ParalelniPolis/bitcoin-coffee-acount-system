@@ -25,7 +25,20 @@ const paperStyle = css({
 	textAlign: 'center'
 });
 
-class CreateAccount extends React.Component<void, Props, State> {
+const CreateAccountMutation = gql`
+	mutation createAccount($name: String!) {
+		createAccount(
+			name: $name
+			balanceCZK: 0
+		) {
+			id
+		}
+	}`;
+
+@graphql(CreateAccountMutation, {
+	name: 'createAccount'
+})
+export default class CreateAccount extends React.Component<void, Props, State> {
 
 	state: State = {
 		snackbar: false,
@@ -38,34 +51,36 @@ class CreateAccount extends React.Component<void, Props, State> {
 		});
 	};
 
-	handleSubmit = async (event) => {
+	handleSubmit = async (event: Event) => {
 		event.preventDefault();
 
-		const { name } = event.target;
+		if (event.target instanceof HTMLInputElement) {
+			const { name } = event.target;
 
-		if (name.value === '') {
-			this.setState({
-				missingName: 'Name is required'
-			});
+			if (name.value === '') {
+				this.setState({
+					missingName: 'Name is required'
+				});
 
-			return false;
-		}
+				return false;
+			}
 
-		try {
-			await this.props.createAccount({
-				variables: {
-					name: name.value
-				}
-			});
+			try {
+				await this.props.createAccount({
+					variables: {
+						name: name.value
+					}
+				});
 
-			browserHistory.push('/');
-		}
-		catch (error) {
-			console.log(error);
+				browserHistory.push('/');
+			}
+			catch (error) {
+				console.log(error);
 
-			this.setState({
-				snackbar: true
-			});
+				this.setState({
+					snackbar: true
+				});
+			}
 		}
 	};
 
@@ -88,20 +103,4 @@ class CreateAccount extends React.Component<void, Props, State> {
 			</Paper>
 		);
 	}
-}
-
-const CreateAccountMutation = gql`
-	mutation createAccount($name: String!) {
-		createAccount(
-			name: $name
-			balanceCZK: 0
-		) {
-			id
-		}
-	}`;
-
-const CreateAccountPage = graphql(CreateAccountMutation, {
-	name: 'createAccount'
-})(CreateAccount);
-
-export default  CreateAccountPage;
+};
