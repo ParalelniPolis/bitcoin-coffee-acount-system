@@ -6,6 +6,8 @@ import TextField from 'material-ui/TextField/index';
 import SHA256 from 'js-sha256';
 import { css } from 'glamor';
 
+import Keypad from './Keypad';
+
 import delay from '../helpers/delay';
 import { MASTER_PIN } from '../config/index';
 
@@ -39,12 +41,6 @@ const dialogStyle = {
 	flexWrap: 'wrap',
 	justifyContent: 'center',
 	alignItems: 'stretch'
-};
-
-const labelStyle = {
-	margin: 5,
-	height: 40,
-	fontSize: 28
 };
 
 const textInputStyle = css({
@@ -117,16 +113,7 @@ export default class PinDialog extends React.PureComponent<DefaultProps, Props, 
 					disabled
 					{...textInputStyle}
 				/>
-				<FlatButton label="1" onClick={() => this.pinInput(1)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="2" onClick={() => this.pinInput(2)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="3" onClick={() => this.pinInput(3)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="4" onClick={() => this.pinInput(4)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="5" onClick={() => this.pinInput(5)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="6" onClick={() => this.pinInput(6)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="7" onClick={() => this.pinInput(7)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="8" onClick={() => this.pinInput(8)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="9" onClick={() => this.pinInput(9)} style={labelStyle} labelStyle={labelStyle} />
-				<FlatButton label="0" onClick={() => this.pinInput(0)} style={labelStyle} labelStyle={labelStyle} />
+				<Keypad pinInput={value => this.pinInput(value)} />
 			</Dialog>
 		);
 	}
