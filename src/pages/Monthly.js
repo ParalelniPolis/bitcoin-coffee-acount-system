@@ -12,10 +12,8 @@ import {
 	TableRowColumn
 } from 'material-ui';
 
-type Product = {
-	name: string,
-	priceCZK: number
-}
+import type { Product } from '../types/Product';
+import type { Account } from '../types/Account';
 
 type Order = {
 	priceCZK: number,
@@ -24,12 +22,6 @@ type Order = {
 		name: string
 	},
 	products: Array<Product>
-}
-
-type Account = {
-	id: string,
-	name: string,
-	balanceCZK: number
 }
 
 type GroupedOrders = {
