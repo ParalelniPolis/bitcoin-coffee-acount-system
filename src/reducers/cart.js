@@ -52,6 +52,9 @@ export default (state: State = initialState, action: Action): State => {
 				};
 			}
 
+		case Constants.RESET_CART:
+			return initialState;
+
 		default:
 			return state;
 	}

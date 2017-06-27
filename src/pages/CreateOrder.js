@@ -31,6 +31,7 @@ type Props = {
 	addCredits: Function,
 	addToCart: Function,
 	removeFromCart: Function,
+	resetCart: Function,
 	cartProducts: {
 		[string]: CartProduct
 	},
@@ -201,6 +202,7 @@ export default class CreateOrder extends React.Component<void, Props, State> {
 			this.setState({
 				orderCreated: true
 			}, async () => {
+				this.props.resetCart();
 				await delay(1000);
 				browserHistory.push('/');
 			});
