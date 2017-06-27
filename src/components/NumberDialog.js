@@ -64,7 +64,7 @@ export default class NumberDialog extends React.PureComponent<DefaultProps, Prop
 
 	state: State = initialState;
 
-	pinInput = (numberClicked: number): void => {
+	numberInput = (numberClicked: number): void => {
 		this.setState({
 			inputPinNumber: this.state.inputPinNumber + numberClicked.toString()
 		});
@@ -132,7 +132,7 @@ export default class NumberDialog extends React.PureComponent<DefaultProps, Prop
 					disabled
 					{...textInputStyle}
 				/>
-				<Keypad pinInput={value => this.pinInput(value)} />
+				<Keypad input={value => this.numberInput(value)} />
 			</Dialog>
 		);
 	}

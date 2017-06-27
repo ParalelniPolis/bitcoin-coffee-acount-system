@@ -113,7 +113,7 @@ export default class PinDialog extends React.PureComponent<DefaultProps, Props, 
 					disabled
 					{...textInputStyle}
 				/>
-				<Keypad pinInput={value => this.pinInput(value)} />
+				<Keypad input={value => this.pinInput(value)} />
 			</Dialog>
 		);
 	}
