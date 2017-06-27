@@ -42,7 +42,7 @@ const listItemStyle = {
 };
 
 const FeedQuery = gql`query allAccounts {
-  allAccounts {
+  allAccounts(orderBy: name_ASC) {
     id
     name
   }
