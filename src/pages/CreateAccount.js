@@ -54,7 +54,7 @@ export default class CreateAccount extends React.Component<void, Props, State> {
 	handleSubmit = async (event: Event) => {
 		event.preventDefault();
 
-		if (event.target instanceof HTMLInputElement) {
+		if (event.target instanceof HTMLFormElement) {
 			const { name } = event.target;
 
 			if (name.value === '') {
