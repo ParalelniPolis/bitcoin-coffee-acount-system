@@ -41,7 +41,7 @@ const MonthlyOrdersQuery = gql`query allOrders {
     AND:[{
       createdAt_gte: "2017-06-01T00:00:00.000Z"
     }, {
-      createdAt_lte: "2017-06-31T23:59:59.000Z"
+      createdAt_lte: "2017-06-30T23:59:59.000Z"
     }
   ]}) {
     account {
