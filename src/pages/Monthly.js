@@ -2,112 +2,167 @@
 import React, { Element } from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { groupBy, sum } from 'lodash';
+import { sumBy } from 'lodash';
+import moment from 'moment';
+import CircularProgress from 'material-ui/CircularProgress/index';
 import {
+	Paper,
 	Table,
 	TableBody,
 	TableHeader,
 	TableHeaderColumn,
 	TableRow,
-	TableRowColumn
+	TableRowColumn,
+	DatePicker
 } from 'material-ui';
 
 import type { Product } from '../types/Product';
-import type { Account } from '../types/Account';
 
 type Order = {
 	priceCZK: number,
-	account: {
-		id: string,
-		name: string
-	},
 	products: Array<Product>
 }
 
-type GroupedOrders = {
-	[account_id: string]: ?Array<Order>
+type creditTransaction = {
+	amount: number
+}
+
+type Account = {
+	id: string,
+	name: string,
+	orders: Array<Order>,
+	creditTransactions: Array<creditTransaction>
 }
 
 type Props = {
 	data: {
 		loading: boolean,
-		allOrders: Array<Order>,
-		allAccounts: Array<Account>
+		allAccounts: Array<Account>,
+		variables: {
+			dateFrom: string,
+			dateTo: string
+		},
+		refetch: Function
 	}
 }
 
-const MonthlyOrdersQuery = gql`query allOrders {
-  allOrders(filter: {
-    AND:[{
-      createdAt_gte: "2017-06-01T00:00:00.000Z"
-    }, {
-      createdAt_lte: "2017-06-30T23:59:59.000Z"
-    }
-  ]}) {
-    account {
-    	id
-      name
-    }
-    products {
-    	name
-    	priceCZK
-    }
-    priceCZK
-  }
-  allAccounts {
+const lastMonthStart = moment()
+	.subtract(1, 'month')
+	.set({ date: 1, hour: 0, minute: 0, second: 0, millisecond: 0 })
+	.format();
+const lastMonthEnd = moment()
+	.set({ date: 1, hour: 0, minute: 0, second: 0, millisecond: 0 })
+	.subtract(1, 'millisecond')
+	.format();
+
+const MonthlyOrdersQuery = gql`query allOrders($dateFrom: DateTime!, $dateTo: DateTime!) {
+  allAccounts(orderBy: name_ASC) {
   	id
   	name
-  	balanceCZK
-  	orders {
+  	orders(filter: {
+			AND:[{
+				createdAt_gte: $dateFrom
+			}, {
+				createdAt_lte: $dateTo
+			}
+		]}) {
   		priceCZK
+  	}
+  	creditTransactions(filter: {
+  		AND:[{
+				createdAt_gte: $dateFrom
+			}, {
+				createdAt_lte: $dateTo
+			}]
+  	}) {
+  		amount
   	}
   }
 }`;
 
-
-@graphql(MonthlyOrdersQuery)
+@graphql(MonthlyOrdersQuery, {
+	options: () => ({
+		variables: {
+			dateFrom: lastMonthStart,
+			dateTo: lastMonthEnd
+		}
+	})
+})
 export default class MonthlyPage extends React.PureComponent<void, Props, void> {
+
+	changeDateFrom = (dateFrom: string): void => {
+		this.props.data.refetch({dateFrom: moment(dateFrom).format() });
+	};
+
+	changeDateTo = (dateTo: string): void => {
+		this.props.data.refetch({ dateTo: moment(dateTo).set({ hour: 23, minute: 59, second: 59, millisecond: 59 }).format() });
+	};
+
 	render(): ?Element<any> {
 		if (this.props.data.loading) {
-			return null;
+			return <CircularProgress />;
 		}
 
-		const groupedOrders: GroupedOrders = groupBy(this.props.data.allOrders, 'account.id');
-		console.log(groupedOrders);
+		const allAccounts: Array<Account> = this.props.data.allAccounts;
+		let ordersTotal = 0;
+		let creditsTotal = 0;
 
 		return (
-			<Table style={{ maxWidth: 800, marginTop: 10 }}>
-				<TableHeader displaySelectAll={false}>
-					<TableRow>
-						<TableHeaderColumn>
-							Name
-						</TableHeaderColumn>
-						<TableHeaderColumn>
-							Amount CZK
-						</TableHeaderColumn>
-					</TableRow>
-				</TableHeader>
-				<TableBody displayRowCheckbox={false}>
-					{
-						Object.keys(groupedOrders).map((orderGroup) => {
+			<div style={{ maxWidth: 800, marginTop: 10, height: 'auto', overflow: 'auto' }}>
+				<Paper style={{ padding: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
+					<h2>Choose date</h2>
+					<DatePicker name="fromDate"
+											defaultDate={new Date(this.props.data.variables.dateFrom)} floatingLabelText="From date"
+											mode="landscape" onChange={(event, date) => this.changeDateFrom(date)} />
+					<DatePicker name="toDate"
+											defaultDate={new Date(this.props.data.variables.dateTo)} floatingLabelText="To date"
+											mode="landscape" onChange={(event, date) => this.changeDateTo(date)} />
+				</Paper>
+				<Table style={{ maxWidth: 800, marginTop: 10 }}>
+					<TableHeader displaySelectAll={false}>
+						<TableRow>
+							<TableHeaderColumn style={{ textAlign: 'left' }}>
+								Name
+							</TableHeaderColumn>
+							<TableHeaderColumn style={{ textAlign: 'right' }}>
+								Amount CZK
+							</TableHeaderColumn>
+							<TableHeaderColumn style={{ textAlign: 'right' }}>
+								Added credits in CZK
+							</TableHeaderColumn>
+						</TableRow>
+					</TableHeader>
+					<TableBody displayRowCheckbox={false}>
+						{
+							allAccounts.map((account) => {
+								const id = account.id;
+								const name = account.name;
 
-							if (!groupedOrders[orderGroup]) return null;
+								const userOrdersTotal = sumBy(account.orders, 'priceCZK') || 0;
 
-							const id = groupedOrders[orderGroup][0].account.id;
-							const name = groupedOrders[orderGroup][0].account.name;
-							const pricesArray = groupedOrders[orderGroup].map(order => order.priceCZK);
-							const computedPrice = sum(pricesArray);
+								const accountWithCredits = allAccounts.find(account => account.id === id);
+								const accountCreditsAdded = (accountWithCredits && sumBy(accountWithCredits.creditTransactions, 'amount')) || 0;
 
-							return (
-								<TableRow key={id}>
-									<TableRowColumn>{name}</TableRowColumn>
-									<TableRowColumn style={{ textAlign: 'right' }}>{computedPrice} CZK</TableRowColumn>
-								</TableRow>
-							);
-						})
-					}
-				</TableBody>
-			</Table>
+								ordersTotal += userOrdersTotal;
+								creditsTotal += accountCreditsAdded;
+
+								return (
+									<TableRow key={id}>
+										<TableRowColumn>{name}</TableRowColumn>
+										<TableRowColumn style={{ textAlign: 'right' }}>{userOrdersTotal} CZK</TableRowColumn>
+										<TableRowColumn style={{ textAlign: 'right' }}>{accountCreditsAdded} CZK</TableRowColumn>
+									</TableRow>
+								);
+							})
+						}
+						<TableRow>
+							<TableRowColumn><strong>Total</strong></TableRowColumn>
+							<TableRowColumn style={{ textAlign: 'right' }}><strong>{ordersTotal} CZK</strong></TableRowColumn>
+							<TableRowColumn style={{ textAlign: 'right' }}><strong>{creditsTotal} CZK</strong></TableRowColumn>
+						</TableRow>
+					</TableBody>
+				</Table>
+			</div>
 		);
 	}
-}
+};
